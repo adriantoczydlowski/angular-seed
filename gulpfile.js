@@ -55,7 +55,7 @@ gulp.task('coffee', function () {
  * @desc Minify and bundle the app's JavaScript
  */
 gulp.task('js', ['coffee', 'jshint', 'templatecache'], function () {
-    log('Bundling, minifying, gziping, and copying the app\'s  JavaScript');
+    log('Bundling, minifying, and copying the app\'s  JavaScript');
 
     var source = [].concat(pkg.paths.js, pkg.paths.stage + 'templates.js');
     return gulp
@@ -74,13 +74,13 @@ gulp.task('js', ['coffee', 'jshint', 'templatecache'], function () {
  * @desc Copy the Vendor JavaScript
  */
 gulp.task('vendorjs', function () {
-    log('Bundling, minifying, gziping, and copying the Vendor JavaScript');
-    return gulp.src(pkg.paths.vendorjs2)
+    log('Bundling, minifying, and copying the Vendor JavaScript');
+
+    return gulp.src(pkg.paths.vendorjs)
         .pipe(plug.concat('vendor.min.js'))
         .pipe(plug.bytediff.start())
-        .pipe(plug.uglify())
         .pipe(plug.bytediff.stop(common.bytediffFormatter))
-        .pipe(gulp.dest(pkg.paths.stage + 'vendor'));
+        .pipe(gulp.dest(pkg.paths.stage));
 });
 
 /**
@@ -95,7 +95,7 @@ gulp.task('css', function () {
         .pipe(plug.minifyCss({}))
         .pipe(plug.bytediff.stop(common.bytediffFormatter))
 //        .pipe(plug.concat('all.min.css')) // Before bytediff or after
-        .pipe(gulp.dest(pkg.paths.stage + 'styles'));
+        .pipe(gulp.dest(pkg.paths.stage));
 });
 
 /**
@@ -103,19 +103,24 @@ gulp.task('css', function () {
  */
 gulp.task('vendorcss', function () {
     log('Compressing, bundling, compying vendor CSS');
-    return gulp.src(pkg.paths.vendorcss)
+
+    var cssFilter = gulpFilter('*.css');
+    var bowerSrc = require('main-bower-files');
+
+    return gulp.src(bowerSrc())
+        .pipe(cssFilter)
         .pipe(plug.concat('vendor.min.css'))
         .pipe(plug.bytediff.start())
         .pipe(plug.minifyCss({}))
         .pipe(plug.bytediff.stop(common.bytediffFormatter))
-        .pipe(gulp.dest(pkg.paths.stage + 'styles'));
+        .pipe(gulp.dest(pkg.paths.stage));
 });
 
 /**
  * @desc Copy fonts
  */
 gulp.task('fonts', function () {
-    var dest = pkg.paths.stage + 'styles/fonts';
+    var dest = pkg.paths.build + 'styles/fonts/';
     log('Copying fonts');
     return gulp
         .src(pkg.paths.fonts)
@@ -160,9 +165,9 @@ gulp.task('compass', function () {
         .src(pkg.paths.sass)
         .pipe(plug.compass({
           sass: 'src/styles',
-          image: 'build/dev/styles/images',
-          generatedImages: 'build/dev/styles/sprites',
-          css: 'build/dev/styles',
+          image: 'src/build/styles/images',
+          generatedImages: 'src/build/styles/sprites',
+          css: 'src/build/styles',
           comments: false
         }))
         .on('error', function(err) {
@@ -198,7 +203,7 @@ gulp.task('inject-angular', function () {
     .src(pkg.paths.src+ '/index.html')
     .pipe(plug.inject(angularJs, {
       starttag: '<!-- inject:js -->' ,
-      ignorePath: ['build', 'src'],
+      ignorePath: ['src'],
       relative: true
     }))
     .pipe(gulp.dest(pkg.paths.src));
@@ -212,13 +217,11 @@ gulp.task('inject-bower', function () {
 
   var jsFilter = gulpFilter('*.js');
   var cssFilter = gulpFilter('*.css');
-  var fontFilter = gulpFilter(['*.eot', '*.woff', '*.svg', '*.ttf']);
   var bowerSrc = require('main-bower-files');
 
   var src = gulp.src(bowerSrc());
   var bowerJs = src.pipe(jsFilter);
   var bowerCss = src.pipe(cssFilter);
-  var bowerFont = src.pipe(fontFilter);
 
   return gulp
     .src(pkg.paths.src+ '/index.html')
@@ -282,12 +285,33 @@ gulp.task('watch', function () {
     var images = ['gulpfile.js'].concat(pkg.paths.images);
     var js = ['gulpfile.js'].concat(pkg.paths.js);
     var bower = ['gulpfile.js'].concat(pkg.paths.bower);
+    var slim = ['gulpfile.js'].concat(pkg.paths.slim);
+    var sass = ['gulpfile.js'].concat(pkg.paths.sass);
+    var coffee = ['gulpfile.js'].concat(pkg.paths.coffee);
 
     watch(bower, function (files, cb) {
       gulp.start(['inject-bower', 'copy-font']);
     });
 
+    watch(images, function (files, cb) {
+      gulp.start(['images']);
+    });
 
+    watch(slim, function (files, cb) {
+      gulp.start(['slim']);
+    });
+
+    watch(sass, function (files, cb) {
+      gulp.start(['compass']);
+    });
+
+    watch(coffee, function (files, cb) {
+      gulp.start(['coffee']);
+    });
+
+    watch(js, function (files, cb) {
+      gulp.start(['jshint', 'inject-angular']);
+    });
 
 });
 
@@ -342,13 +366,6 @@ gulp.task('serve-dev', function () {
     startLivereload('development');
 });
 
-/**
- * serve the staging environment
- */
-gulp.task('serve-stage', function () {
-    serve({env: 'stage'});
-    startLivereload('stage');
-});
 
 function startLivereload(env) {
     var path = (env === 'stage' ? [pkg.paths.stage, pkg.paths.client + '/**'] : [pkg.paths.client + '/**']);

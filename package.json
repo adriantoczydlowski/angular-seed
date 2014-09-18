@@ -69,12 +69,17 @@
       "bower.json"
     ],
     "vendorjs": [
-      "./bower_components/angular/angular.min.js",
-      "./bower_components/angular-loader/angular-loader.min.js",
-      "./bower_components/angular-route/angular-route.min.js"
+      "./src/bower_components/angular/angular.min.js",
+      "./src/bower_components/angular-loader/angular-loader.min.js",
+      "./src/bower_components/angular-route/angular-route.min.js",
+      "./src/bower_components/angular-animate/angular-animate.min.js",
+      "./src/bower_components/jquery/dist/jquery.min.js",
+      "./src/bower_components/toastr/toastr.min.js"
     ],
     "vendorcss": [
-      "./src/bower_components/normalize.css/normalize.css"
+      "./src/bower_components/normalize.css/normalize.css",
+      "./src/bower_components/toastr/toastr.css",
+      "./src/bower_components/font-awesome/css/font-awesome.css"
     ],
     "css": [
       "./src/build/styles/application.css"
@@ -88,10 +93,10 @@
       "./build/stage/all.min.js"
     ],
     "fonts": [
-      "./src/styles/fonts/"
+      "./src/styles/fonts/*"
     ],
     "compressedimages": [
-      "./src/build/styles/images/"
+      "./src//styles/images/compressed/"
     ],
     "images": [
       "./src/styles/images/src/**/*.png"
