@@ -281,37 +281,36 @@ gulp.task('clean', function () {
 gulp.task('watch', function () {
     log('Watching all files');
 
-    var css = ['gulpfile.js'].concat(pkg.paths.css);
-    var images = ['gulpfile.js'].concat(pkg.paths.images);
-    var js = ['gulpfile.js'].concat(pkg.paths.js);
-    var bower = ['gulpfile.js'].concat(pkg.paths.bower);
-    var slim = ['gulpfile.js'].concat(pkg.paths.slim);
-    var sass = ['gulpfile.js'].concat(pkg.paths.sass);
-    var coffee = ['gulpfile.js'].concat(pkg.paths.coffee);
 
-    watch(bower, function (files, cb) {
-      gulp.start(['inject-bower', 'copy-font']);
+    watch(pkg.paths.bower, function (files, cb) {
+      gulp.start(['inject-bower', 'copy-font'], cb);
     });
 
-    watch(images, function (files, cb) {
-      gulp.start(['images']);
+    watch(pkg.paths.images, function (files, cb) {
+      gulp.start('images', cb);
     });
 
-    watch(slim, function (files, cb) {
-      gulp.start(['slim']);
+    watch(pkg.paths.slim, function (files, cb) {
+      gulp.start('slim', cb);
     });
 
-    watch(sass, function (files, cb) {
-      gulp.start(['compass']);
+    watch(pkg.paths.sass, function (files, cb) {
+      gulp.start('compass', cb);
     });
 
-    watch(coffee, function (files, cb) {
-      gulp.start(['coffee']);
+    watch(pkg.paths.coffee, function (files, cb) {
+      gulp.start('coffee', cb);
     });
 
-    watch(js, function (files, cb) {
-      gulp.start(['jshint', 'inject-angular']);
-    });
+    watch(pkg.paths.js, function (files, cb) {
+      gulp.start(['jshint', 'inject-angular'], cb);
+    }).pipe(plug.connect.reload());
+
+    watch(pkg.paths.htmltemplates, function (files, cb) {
+    }).pipe(plug.connect.reload());
+
+    watch(pkg.paths.css, function (files, cb) {
+    }).pipe(plug.connect.reload());
 
 });
 
@@ -348,14 +347,22 @@ gulp.task('watch2', function () {
 });
 
 /**
- * serve the dev environment with gulp-connect
+ * connect the dev environment with gulp-connect
  */
-gulp.task('serve', function () {
+gulp.task('connect', function () {
   plug.connect.server({
     root: ['src', 'build'],
     port: 9000,
     livereload: true
   });
+
+});
+
+/**
+ * run dev server
+ */
+gulp.task('serve', function () {
+  gulp.start(['connect', 'watch']);
 });
 
 /**
