@@ -1,0 +1,1 @@
+angular.module("app.core").run(["$templateCache", function($templateCache) {$templateCache.put("app/app/avengers/avengers.html","<!DOCTYPE html>\n<html ng-app=\"app\">\n  <head></head>\n  <body ng-controller=\"Test as ctrl\">\n    <div class=\"test\">\n      <p>\n        {{test}}\n      </p>\n    </div>\n  </body>\n</html>\n");}]);

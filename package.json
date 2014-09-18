@@ -6,29 +6,113 @@
   "repository": "https://github.com/angular/angular-seed",
   "license": "MIT",
   "devDependencies": {
-    "karma": "~0.10",
-    "protractor": "^1.1.1",
-    "http-server": "^0.6.1",
     "bower": "^1.3.1",
-    "shelljs": "^0.2.6",
-    "karma-junit-reporter": "^0.2.2"
+    "chalk": "^0.5.1",
+    "connect-gzip": "^0.1.6",
+    "gulp": "^3.8.8",
+    "gulp-angular-templatecache": "^1.3.0",
+    "gulp-autoprefixer": "^1.0.0",
+    "gulp-bytediff": "^0.2.0",
+    "gulp-cache": "^0.2.2",
+    "gulp-coffee": "^2.2.0",
+    "gulp-compass": "^1.3.1",
+    "gulp-concat": "^2.4.0",
+    "gulp-connect": "^2.0.6",
+    "gulp-filter": "^1.0.2",
+    "gulp-gzip": "0.0.8",
+    "gulp-imagemin": "^1.0.1",
+    "gulp-inject": "^1.0.2",
+    "gulp-jshint": "^1.8.4",
+    "gulp-karma": "0.0.4",
+    "gulp-livereload": "^2.1.1",
+    "gulp-load-plugins": "^0.6.0",
+    "gulp-load-utils": "0.0.4",
+    "gulp-minify-css": "^0.3.8",
+    "gulp-minify-html": "^0.1.5",
+    "gulp-ng-annotate": "^0.3.1",
+    "gulp-nodemon": "^1.0.4",
+    "gulp-rename": "^1.2.0",
+    "gulp-rimraf": "^0.1.0",
+    "gulp-shell": "^0.2.9",
+    "gulp-slim": "0.0.10",
+    "gulp-sourcemaps": "^1.1.4",
+    "gulp-task-listing": "^0.3.0",
+    "gulp-uglify": "^1.0.1",
+    "gulp-util": "^3.0.1",
+    "gulp-watch": "^1.0.5",
+    "http-server": "^0.6.1",
+    "jshint-stylish": "^0.4.0",
+    "karma": "~0.10",
+    "karma-junit-reporter": "^0.2.2",
+    "main-bower-files": "^2.0.0",
+    "minimist": "^1.1.0",
+    "protractor": "^1.1.1",
+    "shelljs": "^0.2.6"
+  },
+  "paths": {
+    "src": "./src/",
+    "styles": "./src/styles/",
+    "api": "/api",
+    "html": "./src/**/*.html",
+    "htmltemplates": "./src/build/**/*.html",
+    "slim": [
+      "./src/app/**/*.slim"
+    ],
+    "coffee": [
+      "./src/app/**/*module*.coffee",
+      "./src/app/**/*.coffee"
+    ],
+    "sass": [
+      "./src/styles/**/*.sass"
+    ],
+    "bower": [
+      "bower.json"
+    ],
+    "vendorjs": [
+      "./bower_components/angular/angular.min.js",
+      "./bower_components/angular-loader/angular-loader.min.js",
+      "./bower_components/angular-route/angular-route.min.js"
+    ],
+    "vendorcss": [
+      "./src/bower_components/normalize.css/normalize.css"
+    ],
+    "css": [
+      "./src/build/styles/application.css"
+    ],
+    "js": [
+      "./src/build/app/**/*module*.js",
+      "./src/build/app/**/*.js",
+      "./src/build/app/*module*.js"
+    ],
+    "gzip": [
+      "./build/stage/all.min.js"
+    ],
+    "fonts": [
+      "./src/styles/fonts/"
+    ],
+    "compressedimages": [
+      "./src/build/styles/images/"
+    ],
+    "images": [
+      "./src/styles/images/src/**/*.png"
+    ],
+    "stage": "./dist/",
+    "build": "./src/build/"
   },
   "scripts": {
     "postinstall": "bower install",
-
     "prestart": "npm install",
     "start": "http-server -a localhost -p 8000 -c-1",
-
     "pretest": "npm install",
     "test": "karma start karma.conf.js",
     "test-single-run": "karma start karma.conf.js  --single-run",
-
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
-
     "preprotractor": "npm run update-webdriver",
     "protractor": "protractor e2e-tests/protractor.conf.js",
-
     "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /\\/\\/@@NG_LOADER_START@@[\\s\\S]*\\/\\/@@NG_LOADER_END@@/, '//@@NG_LOADER_START@@\\n' + sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=bower_components/angular-loader/angular-loader.min.js.map','app/bower_components/angular-loader/angular-loader.min.js') + '\\n//@@NG_LOADER_END@@', 'app/index-async.html');\""
+  },
+  "dependencies": {
+    "gulp-coffee": "^2.2.0"
   }
 }
